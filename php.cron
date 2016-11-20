@@ -1,0 +1,1 @@
+*/5 * * * * www-data sh -c "cd /var/www/html/utils/ && /usr/local/bin/php indexer.php --config /var/www/html/conf/settings.xml > /var/www/html/data/indexer-cron.log"
