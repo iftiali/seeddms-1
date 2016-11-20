@@ -1,0 +1,55 @@
+FROM debian:jessie
+RUN apt-get update && apt-get install -y \
+       wget
+
+WORKDIR  /tmp/seeddms
+
+RUN wget -O seeddms.tar.gz "http://downloads.sourceforge.net/project/seeddms/seeddms-5.0.7/seeddms-5.0.7.tar.gz?r=https%3A%2F%2Fsourceforge.net%2Fprojects%2Fseeddms%2Ffiles%2Fseeddms-5.0.7%2F&ts=1479642456&use_mirror=netcologne" \
+    && tar xvzf seeddms.tar.gz \
+    && mkdir -p /var/www/html \
+    && mv seeddms-5.0.7/* /var/www/html \
+    && chown -R root:root /var/www/html \
+    && mkdir -p /var/www/html/data/cache \
+    && mkdir -p /var/www/html/data/lucene \
+    && mkdir -p /var/www/html/data/staging \
+    && chown -R root:www-data /var/www/html/data \
+    && chmod -R g+rw /var/www/html/data \
+    && chown -R root:www-data /var/www/html/conf \
+    && mkdir -p /var/www/html/pear/SeedDMS \
+    && rm -R seeddms-5.0.7 \
+    && rm seeddms.tar.gz
+
+RUN wget -O SeedDMS_Core.tgz "http://downloads.sourceforge.net/project/seeddms/seeddms-5.0.7/SeedDMS_Core-5.0.7.tgz?r=https%3A%2F%2Fsourceforge.net%2Fprojects%2Fseeddms%2Ffiles%2Fseeddms-5.0.7%2F&ts=1479642580&use_mirror=netassist" \
+    && tar xvzf SeedDMS_Core.tgz \
+    && mv SeedDMS_Core-5.0.7/Core /var/www/html/pear/SeedDMS \
+    && mv SeedDMS_Core-5.0.7/Core.php /var/www/html/pear/SeedDMS \
+    && rm -R SeedDMS_Core-5.0.7 \
+    && rm SeedDMS_Core.tgz
+
+RUN wget -O SeedDMS_Lucene.tgz "http://downloads.sourceforge.net/project/seeddms/seeddms-5.0.7/SeedDMS_Lucene-1.1.9.tgz?r=https%3A%2F%2Fsourceforge.net%2Fprojects%2Fseeddms%2Ffiles%2Fseeddms-5.0.7%2F&ts=1479642625&use_mirror=kent" \
+    && tar xvzf SeedDMS_Lucene.tgz \
+    && mv SeedDMS_Lucene-1.1.9/Lucene /var/www/html/pear/SeedDMS \
+    && mv SeedDMS_Lucene-1.1.9/Lucene.php /var/www/html/pear/SeedDMS \
+    && rm -R SeedDMS_Lucene-1.1.9 \
+    && rm SeedDMS_Lucene.tgz   
+
+RUN wget -O SeedDMS_Preview.tgz "http://downloads.sourceforge.net/project/seeddms/seeddms-5.0.7/SeedDMS_Preview-1.1.9.tgz?r=https%3A%2F%2Fsourceforge.net%2Fprojects%2Fseeddms%2Ffiles%2Fseeddms-5.0.7%2F&ts=1479642667&use_mirror=netix" \
+    && tar xvzf SeedDMS_Preview.tgz \
+    && mv SeedDMS_Preview-1.1.9/Preview /var/www/html/pear/SeedDMS \
+    && mv SeedDMS_Preview-1.1.9/Preview.php /var/www/html/pear/SeedDMS \
+    && rm -R SeedDMS_Preview-1.1.9 \
+    && rm SeedDMS_Preview.tgz  
+
+RUN wget -O SeedDMS_SQLiteFTS.tgz "http://downloads.sourceforge.net/project/seeddms/seeddms-5.0.7/SeedDMS_SQLiteFTS-1.0.6.tgz?r=https%3A%2F%2Fsourceforge.net%2Fprojects%2Fseeddms%2Ffiles%2Fseeddms-5.0.7%2F&ts=1479642700&use_mirror=netcologne" \
+    && tar xvzf SeedDMS_SQLiteFTS.tgz \
+    && mv SeedDMS_SQLiteFTS-1.0.6/SQLiteFTS /var/www/html/pear/SeedDMS \
+    && mv SeedDMS_SQLiteFTS-1.0.6/SQLiteFTS.php /var/www/html/pear/SeedDMS \
+    && rm -R SeedDMS_SQLiteFTS-1.0.6 \
+    && rm SeedDMS_SQLiteFTS.tgz   
+
+RUN touch /var/www/html/conf/ENABLE_INSTALL_TOOL \
+    && chown -R root:www-data /var/www/html/pear \
+    && rm -R /tmp/seeddms
+
+WORKDIR /var/www/html
+VOLUME ["/var/www/html"]
